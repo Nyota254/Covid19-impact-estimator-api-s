@@ -1,0 +1,12 @@
+#ignore pycache generated folders
+__pycache__
+#ignore python compiled files
+*.pyc
+#ignore virtual environment
+virtual/
+#ignore vscode configurations
+.vscode
+#ignore environment variables
+.env
+#ignore db
+db.sqlite3
