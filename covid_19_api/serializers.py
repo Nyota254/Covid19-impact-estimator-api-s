@@ -4,7 +4,7 @@ from .models import Log
 class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
-        fields = ('responseTime')
+        fields = ('responseTime',)
         
 class RegionSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=40)

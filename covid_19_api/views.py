@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import Log
 from .serializers import LogSerializer,RegionSerializer,CovidDataEntrySerializer
-
+from rest_framework_xml.parsers import XMLParser
+from timeit import default_timer as timer
 
 def estimator(data):
   '''
@@ -125,27 +126,45 @@ def home(request):
     return render(request,"home.html",context)
 
 class CovidData(APIView):
+    start = timer()
     def post(self, request, format=None):
         serializers = CovidDataEntrySerializer(data=request.data)
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    end = timer()
+    covidApiTime = int(end-start * 1000)
+    api_logs = Log(responseTime=f"POST    api/v1/on-covid-19/   {status.HTTP_201_CREATED}    {covidApiTime}ms")
+    api_logs.save()
+    
     
 class CovidDataJson(APIView):
+    start = timer()
     def post(self, request, format=None):
         serializers = CovidDataEntrySerializer(data=request.data)
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    end = timer()
+    covidApiTime = int(end-start * 1000)
+    api_logs = Log(responseTime=f"POST    api/v1/on-covid-19/json    {status.HTTP_201_CREATED}    {covidApiTime}ms")
+    api_logs.save()
+    
+class CovidDataXML(APIView):
+    start = timer()
+    parser_classes = (XMLParser,)
+    def post(self, request, formart=None):
+        serializers = CovidDataEntrySerializer(data=request.data)
+        if serializers.is_valid():
+            return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    end = timer()
+    covidApiTime = int(end-start * 1000)
+    api_logs = Log(responseTime=f"POST    api/v1/on-covid-19/xml    {status.HTTP_201_CREATED}    {covidApiTime}ms")
+    api_logs.save()
 
 class LogList(APIView):
     def get(self, request, format=None):
         all_logs = Log.objects.all()
         serializers = LogSerializer(all_logs,many=True)
         return Response(serializers.data)  
-    # def post(self, request, format=None):
-    #     serializers = LogSerializer(data=request.data)
-    #     if serializers.is_valid():
-    #         serializers.save()
-    #         return Response(serializers.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
