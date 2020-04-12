@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+class Log(models.Model):
+    '''
+    Contains data on response time
+    '''
+    responseTime = models.CharField(max_length=10000)
