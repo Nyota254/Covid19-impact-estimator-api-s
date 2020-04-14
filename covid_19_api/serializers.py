@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from .models import Log
+from rest_framework_tracking.models import  APIRequestLog
 
 class LogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Log
-        fields = ('responseTime',)
+        model = APIRequestLog
+        fields = ["method","path","status_code","response_ms"]
+        
         
 class RegionSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=40)

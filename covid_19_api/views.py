@@ -8,6 +8,10 @@ from .serializers import LogSerializer,RegionSerializer,CovidDataEntrySerializer
 from rest_framework_xml.parsers import XMLParser
 from rest_framework_xml.renderers import XMLRenderer
 from timeit import default_timer as timer
+from rest_framework.response import Response
+from rest_framework_tracking.mixins import LoggingMixin
+from rest_framework_tracking.models import APIRequestLog
+
 
 def estimator(data):
   '''
@@ -127,21 +131,21 @@ def home(request):
     
     return render(request,"home.html",context)
 
-class CovidData(APIView):
+class CovidData(LoggingMixin,APIView):
     def post(self, request, format=None):
         serializers = CovidDataEntrySerializer(data=request.data)
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class CovidDataJson(APIView):
+class CovidDataJson(LoggingMixin,APIView):
     def post(self, request, format=None):
         serializers = CovidDataEntrySerializer(data=request.data)
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class CovidDataXML(APIView):
+class CovidDataXML(LoggingMixin,APIView):
     renderer_classes = [XMLRenderer]
     def post(self, request, formart=None):
         serializers = CovidDataEntrySerializer(data=request.data)
@@ -149,7 +153,11 @@ class CovidDataXML(APIView):
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+class LogList(LoggingMixin,APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'log_list.html'
     
-class LogList(APIView):
-    def get(self, request, format=None):
-        pass 
+    def get(self, request):
+        queryset = APIRequestLog.objects.all()
+        return Response({'logs': queryset})

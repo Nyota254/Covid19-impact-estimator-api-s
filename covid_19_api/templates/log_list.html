@@ -1,0 +1,7 @@
+<html><body>
+    <pre style="word-wrap: break-word; white-space: pre-wrap;">
+        {% for log in logs %}
+        {{log.method}}   {{log.path}}    {{log.status_code}}    {{log.response_ms}}ms
+        {% endfor %}
+    </pre>
+    </body></html>
