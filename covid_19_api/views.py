@@ -168,4 +168,4 @@ class LogList(LoggingMixin,APIView):
     
     def get(self, request):
         queryset = APIRequestLog.objects.all()
-        return Response({'logs': queryset})
+        return Response({'logs': queryset},content_type='text/plain')
