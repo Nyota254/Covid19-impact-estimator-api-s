@@ -148,10 +148,10 @@ class CovidDataJson(LoggingMixin,APIView):
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    def get(self,request,formart=None):
-        serializers = CovidDataEntrySerializer(data=request.data)
-        if serializers.is_valid():
-            return Response(estimator(serializers.data))
+    # def get(self,request,formart=None):
+    #     serializers = CovidDataEntrySerializer(data=request.data)
+    #     if serializers.is_valid():
+    #         return Response(estimator(serializers.data))
     
 class CovidDataXML(LoggingMixin,APIView):
     renderer_classes = [XMLRenderer]
@@ -160,10 +160,10 @@ class CovidDataXML(LoggingMixin,APIView):
         if serializers.is_valid():
             return Response(estimator(serializers.data), status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    def get(self,request,formart=None):
-        serializers = CovidDataEntrySerializer(data=request.data)
-        if serializers.is_valid():
-            return Response(estimator(serializers.data))
+    # def get(self,request,formart=None):
+    #     serializers = CovidDataEntrySerializer(data=request.data)
+    #     if serializers.is_valid():
+    #         return Response(estimator(serializers.data))
     
 
 class LogList(LoggingMixin,APIView):
